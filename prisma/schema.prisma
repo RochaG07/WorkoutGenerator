@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Exercises{
+  id                            String      @id @default(uuid())
+  name                          String   
+  execution_example_link        String?
+     
+  fk_equipment_id              String?
+  equipment                   Equipments? @relation(fields: [fk_equipment_id], references: [id])
+
+  exercises_muscles           Exercises_Muscles[]
+
+  @@map("exercises")
+}
+
+
+model Muscles{
+  id                    String @id @default(uuid())
+  name                  String @unique
+
+  exercises_muscles     Exercises_Muscles[]
+
+  @@map("muscles")
+}
+
+
+model Equipments{
+  id        String @id @default(uuid())
+  name      String @unique
+
+  exercises Exercises[]
+
+  @@map("equipments")
+}
+
+model Exercises_Muscles{
+  id               String @id @default(uuid())
+
+  fk_muscles_id    String
+  muscles           Muscles @relation(fields: [fk_muscles_id], references: [id])
+
+  fk_exercises_id  String
+  exercises       Exercises @relation(fields: [fk_exercises_id], references: [id])
+
+  @@map("exercises_muscles")
+}
