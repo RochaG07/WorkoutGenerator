@@ -11,12 +11,13 @@
 
 API simples que permite a criação de uma série de exercícios físicos com base nos exercícios que foram registrados.
 Cada tabela contém um CRUD básico.
-
-Forma que uma série é gerada: 
-1º: São colocadas no topo 3 exercícios que ativam mais de um grupo muscular(Exercícios compostos).
-2º: Logo depois os exercícios que ativam um grupo muscular(Exercícios isolados), um exercício por grupo muscular.
-
 Pretendo adicionar testes unitários para todos os endpoints.
+
+### Forma que uma série é gerada: 
+1. São colocadas no topo 3 exercícios que ativam mais de um grupo muscular(Exercícios compostos).
+2. Logo depois os exercícios que ativam um grupo muscular(Exercícios isolados), um exercício por grupo muscular.
+3. No final é adicionado um exercício do grupo muscular definido no body da request.
+
 
 ---
 
@@ -64,6 +65,12 @@ O backend do projeto foi desenvolvido utilizando as seguintes tecnologias:
 **DELETE** /exercises/:id | Deleta um exercício existente
 
 **POST** /exercises/workout/generate-fullbody-workout 
+```json
+{
+	"finalizingMuscleName": "Abdômen",
+	"quantityOfMultipleMusclesExercisesChosen": 2
+}
+```
 
 ### Módulo muscles
 **POST** /muscles | Criação de um novo músculo
@@ -109,7 +116,7 @@ DELETE /muscles/:id | Deleta um músculo existente
 
 ```jsx
 #Clonar o repositório
-$ git clone https://github.com/RochaG07/.............
+$ git clone https://github.com/RochaG07/WorkoutGenerator
 
 #Instalar as dependências
 $ yarn add
