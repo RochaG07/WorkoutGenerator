@@ -1,5 +1,4 @@
-import { prismaInstance } from "../../../app";
-import { Muscles } from "@prisma/client";
+import { Muscles, PrismaClient } from "@prisma/client";
 import AppError from "../../../errors/AppError";
 
 interface IRequest{
@@ -7,9 +6,14 @@ interface IRequest{
 }
 
 export default class CreateNewMuscle{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
 
     public async execute({name}:IRequest): Promise<Muscles>{
-        const muscleAlreadyExists = await prismaInstance.muscles.findFirst({
+        const muscleAlreadyExists = await this.prismaInstance.muscles.findFirst({
             where: {
                 name
             }
@@ -19,7 +23,7 @@ export default class CreateNewMuscle{
             throw new AppError("Muscle already exists.");
         }
 
-        const muscle = await prismaInstance.muscles.create({
+        const muscle = await this.prismaInstance.muscles.create({
             data: {
                 name
             }

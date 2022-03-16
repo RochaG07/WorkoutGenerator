@@ -1,5 +1,4 @@
-import { Muscles } from "@prisma/client";
-import { prismaInstance } from "../../../app";
+import { Muscles, PrismaClient } from "@prisma/client";
 import AppError from "../../../errors/AppError";
 
 interface IRequest{
@@ -8,9 +7,14 @@ interface IRequest{
 }
 
 export default class UpdateExistingMuscle{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
 
     public async execute({id, name}: IRequest): Promise<Muscles>{
-        let muscle = await prismaInstance.muscles.findUnique({
+        let muscle = await this.prismaInstance.muscles.findUnique({
             where: {
                 id
             }
@@ -20,7 +24,7 @@ export default class UpdateExistingMuscle{
             throw new AppError("Muscle not found", 404);
         }
         
-        muscle = await prismaInstance.muscles.update({
+        muscle = await this.prismaInstance.muscles.update({
             where: {
                 id
             },

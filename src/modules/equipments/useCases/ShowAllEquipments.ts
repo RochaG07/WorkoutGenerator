@@ -1,8 +1,13 @@
-import { Equipments } from "@prisma/client";
-import { prismaInstance } from "../../../app";
+import { Equipments, PrismaClient } from "@prisma/client";
 
 export default class ShowAllEquipments{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute(): Promise<Equipments[]>{
-        return await prismaInstance.equipments.findMany();
+        return await this.prismaInstance.equipments.findMany();
     }
 }

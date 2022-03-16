@@ -1,5 +1,5 @@
-import { prismaInstance } from "../../../app"
 import AppError from "../../../errors/AppError";
+import { PrismaClient } from "@prisma/client";
 
 interface IRequest{
     id: string
@@ -7,8 +7,14 @@ interface IRequest{
 
 
 export default class DeleteExistingEquipment{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute({id}:IRequest): Promise<void>{
-        const equipment = await prismaInstance.equipments.findUnique({
+        const equipment = await this.prismaInstance.equipments.findUnique({
             where: {
                 id
             }
@@ -19,7 +25,7 @@ export default class DeleteExistingEquipment{
         }
         
 
-        await prismaInstance.equipments.delete({
+        await this.prismaInstance.equipments.delete({
             where: {
                 id
             }

@@ -1,5 +1,4 @@
-import { prismaInstance } from "../../../app";
-import { Exercises } from "@prisma/client";
+import { Exercises, PrismaClient } from "@prisma/client";
 
 interface IRequest{
     finalizingMuscleName: string,
@@ -7,14 +6,20 @@ interface IRequest{
 }
 
 export default class GenerateFullBodyWorkout{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute({finalizingMuscleName, quantityOfMultipleMusclesExercisesChosen}: IRequest):Promise<String[]>{
-        const finalizingMuscle= await prismaInstance.muscles.findUnique({
+        const finalizingMuscle= await this.prismaInstance.muscles.findUnique({
             where: {
                 name: finalizingMuscleName
             }
         });
 
-        const allExercises = await prismaInstance.exercises.findMany();
+        const allExercises = await this.prismaInstance.exercises.findMany();
 
         let multipleMusclesExercises: Exercises[] = [];
         let singleMuscleExercises: Exercises[] = [];
@@ -22,7 +27,7 @@ export default class GenerateFullBodyWorkout{
 
         /// Separa os musculos em isolados/compostos/finalizadores
         for (let i = 0; i < allExercises.length; i++) {
-            const muscles = await prismaInstance.exercises_Muscles.findMany({
+            const muscles = await this.prismaInstance.exercises_Muscles.findMany({
                 where: {
                     fk_exercises_id: allExercises[i].id
                 }
@@ -44,14 +49,14 @@ export default class GenerateFullBodyWorkout{
         let allAvaliableIsolatedMuscleGroupsNames: string[] = []; 
         
         for (let i = 0; i < singleMuscleExercises.length; i++) {
-            const muscle_exercise = await prismaInstance.exercises_Muscles.findFirst({
+            const muscle_exercise = await this.prismaInstance.exercises_Muscles.findFirst({
                 where: {
                    fk_exercises_id: singleMuscleExercises[i].id
                 }
             })
 
             if(muscle_exercise){
-                const muscle = await prismaInstance.muscles.findFirst({
+                const muscle = await this.prismaInstance.muscles.findFirst({
                     where: {
                        id: muscle_exercise.fk_muscles_id
                     }

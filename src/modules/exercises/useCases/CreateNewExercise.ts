@@ -1,6 +1,4 @@
-import { Equipments, Exercises } from "@prisma/client";
-import { create } from "domain";
-import { prismaInstance } from "../../../app";
+import { Exercises, PrismaClient } from "@prisma/client";
 import AppError from "../../../errors/AppError";
 import CreateNewEquipment from "../../equipments/useCases/CreateNewEquipment";
 
@@ -12,9 +10,15 @@ interface IRequest{
 }
 
 export default class CreateNewExercise{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute({name, muscles_names, necessary_equipment_name, execution_example_link}: IRequest): Promise<Exercises>{
 
-        const exerciseAlreadyExists = await prismaInstance.exercises.findFirst({
+        const exerciseAlreadyExists = await this.prismaInstance.exercises.findFirst({
             where: {
                 name
             }
@@ -28,21 +32,21 @@ export default class CreateNewExercise{
         let exercise: Exercises;
 
         if(necessary_equipment_name){
-            let equipment = await prismaInstance.equipments.findFirst({
+            let equipment = await this.prismaInstance.equipments.findFirst({
                 where: {
                     name: necessary_equipment_name
                 }
             })
 
             if(!equipment){
-                const createNewEquipment = new CreateNewEquipment();
+                const createNewEquipment = new CreateNewEquipment(this.prismaInstance);
 
                 equipment = await createNewEquipment.execute({
                     name: necessary_equipment_name
                 });
             }
 
-            exercise = await prismaInstance.exercises.create({
+            exercise = await this.prismaInstance.exercises.create({
                 data: {
                     name,
                     exercises_muscles:{},
@@ -51,7 +55,7 @@ export default class CreateNewExercise{
                 }
             })
         } else {
-            exercise = await prismaInstance.exercises.create({
+            exercise = await this.prismaInstance.exercises.create({
                 data: {
                     name,
                     exercises_muscles:{},
@@ -63,7 +67,7 @@ export default class CreateNewExercise{
 
         // Faz a relação com os músculos (n-n)
         muscles_names.forEach(async (muscle_name: string) => {
-            await prismaInstance.exercises_Muscles.create({
+            await this.prismaInstance.exercises_Muscles.create({
                 data:{
                     exercises:{
                         connect:{

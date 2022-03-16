@@ -1,5 +1,5 @@
-import { Equipments } from "@prisma/client";
-import { prismaInstance } from "../../../app";
+import { Equipments, PrismaClient } from "@prisma/client";
+//import prismaInstance from "../../../prismaInstance";
 import AppError from "../../../errors/AppError";
 
 interface IRequest{
@@ -7,8 +7,15 @@ interface IRequest{
 }
 
 export default class CreateNewEquipment{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute({name}: IRequest): Promise<Equipments>{
-        const equipmentAlreadyExists = await prismaInstance.equipments.findFirst({
+
+        const equipmentAlreadyExists = await this.prismaInstance.equipments.findFirst({
             where: {
                 name
             }
@@ -18,7 +25,7 @@ export default class CreateNewEquipment{
             throw new AppError("Equipment already exists.");
         }
 
-        const equipment = await prismaInstance.equipments.create({
+        const equipment = await this.prismaInstance.equipments.create({
             data:{
                 name
             }

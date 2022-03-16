@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import handleErrorResponse from "../../errors/handleErrorResponse";
+import prismaInstance from "../../prismaInstance";
 
 import CreateNewExercise from "./useCases/CreateNewExercise";
 import DeleteExistingExercise from "./useCases/DeleteExistingExercise";
@@ -10,7 +11,7 @@ export default class ExercisesController{
     public async create(request: Request, response: Response): Promise<Response>{
         const { name, muscles_names, necessary_equipment_name, execution_example_link} = request.body;
 
-        const createNewExercise = new CreateNewExercise();
+        const createNewExercise = new CreateNewExercise(prismaInstance);
 
         try{
             const result = await createNewExercise.execute({name, muscles_names, necessary_equipment_name, execution_example_link});
@@ -23,7 +24,7 @@ export default class ExercisesController{
 
     
     public async read(request: Request, response: Response): Promise<Response>{
-        const showAllExercises = new ShowAllExercises();
+        const showAllExercises = new ShowAllExercises(prismaInstance);
         const result = await showAllExercises.execute();
 
         return response.json(result);
@@ -33,7 +34,7 @@ export default class ExercisesController{
         const {id} = request.params;
         const {name} = request.body;
 
-        const updateExistingExercise = new UpdateExistingExercise();
+        const updateExistingExercise = new UpdateExistingExercise(prismaInstance);
 
         try{
             const result = await updateExistingExercise.execute({id, name})
@@ -48,7 +49,7 @@ export default class ExercisesController{
     public async delete(request: Request, response: Response): Promise<Response>{
         const {id} = request.params;
 
-        const deleteExistingExercise = new DeleteExistingExercise();
+        const deleteExistingExercise = new DeleteExistingExercise(prismaInstance);
 
         try{
             await deleteExistingExercise.execute({id});

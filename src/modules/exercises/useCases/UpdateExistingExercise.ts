@@ -1,5 +1,4 @@
-import { Exercises } from "@prisma/client";
-import { prismaInstance } from "../../../app";
+import { Exercises, PrismaClient } from "@prisma/client";
 import AppError from "../../../errors/AppError";
 
 interface IRequest{
@@ -8,8 +7,14 @@ interface IRequest{
 }
 
 export default class UpdateExistingExercise{
+    prismaInstance: PrismaClient;
+
+    constructor(prismaInstance: PrismaClient){
+        this.prismaInstance = prismaInstance;
+    }
+
     public async execute({id, name}: IRequest): Promise<Exercises>{
-        let exercise = await prismaInstance.exercises.findUnique({
+        let exercise = await this.prismaInstance.exercises.findUnique({
             where:{
                 id
             }
@@ -19,7 +24,7 @@ export default class UpdateExistingExercise{
             throw new AppError("Exercise not found.", 404);
         }
         
-        exercise = await prismaInstance.exercises.update({
+        exercise = await this.prismaInstance.exercises.update({
             where: {
                 id
             },
