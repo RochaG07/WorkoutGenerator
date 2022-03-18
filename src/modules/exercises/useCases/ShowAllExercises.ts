@@ -1,15 +1,15 @@
 import { Exercises, PrismaClient } from "@prisma/client";
 
 export default class ShowAllExercises{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute(): Promise<Exercises[]>{
         
-        const exercises = await this.prismaInstance.exercises.findMany();
+        const exercises = await this.prismaClient.exercises.findMany();
 
         return exercises;
     }

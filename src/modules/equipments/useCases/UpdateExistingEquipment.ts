@@ -7,14 +7,14 @@ interface IRequest{
 }
 
 export default class UpdateExistingEquipment{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id, name}: IRequest): Promise<Equipments>{
-        let equipment = await this.prismaInstance.equipments.findUnique({
+        let equipment = await this.prismaClient.equipments.findUnique({
             where: {
                 id
             }
@@ -24,7 +24,7 @@ export default class UpdateExistingEquipment{
             throw new AppError("Equipment not found.", 404);
         }
 
-        equipment = await this.prismaInstance.equipments.update({
+        equipment = await this.prismaClient.equipments.update({
             where: {
                 id
             },

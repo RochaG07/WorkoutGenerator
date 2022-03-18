@@ -6,14 +6,14 @@ interface IRequest{
 }
 
 export default class CreateNewMuscle{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({name}:IRequest): Promise<Muscles>{
-        const muscleAlreadyExists = await this.prismaInstance.muscles.findFirst({
+        const muscleAlreadyExists = await this.prismaClient.muscles.findFirst({
             where: {
                 name
             }
@@ -23,7 +23,7 @@ export default class CreateNewMuscle{
             throw new AppError("Muscle already exists.");
         }
 
-        const muscle = await this.prismaInstance.muscles.create({
+        const muscle = await this.prismaClient.muscles.create({
             data: {
                 name
             }

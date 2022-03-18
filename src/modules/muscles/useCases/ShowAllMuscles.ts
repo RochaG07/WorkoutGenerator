@@ -1,14 +1,14 @@
 import { Muscles, PrismaClient } from "@prisma/client";
 
 export default class ShowAllMuscles{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute(): Promise<Muscles[]>{
-        const muscles = await this.prismaInstance.muscles.findMany();
+        const muscles = await this.prismaClient.muscles.findMany();
 
         return muscles;
     }

@@ -7,14 +7,14 @@ interface IRequest{
 
 
 export default class DeleteExistingEquipment{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id}:IRequest): Promise<void>{
-        const equipment = await this.prismaInstance.equipments.findUnique({
+        const equipment = await this.prismaClient.equipments.findUnique({
             where: {
                 id
             }
@@ -25,7 +25,7 @@ export default class DeleteExistingEquipment{
         }
         
 
-        await this.prismaInstance.equipments.delete({
+        await this.prismaClient.equipments.delete({
             where: {
                 id
             }

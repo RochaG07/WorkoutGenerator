@@ -7,14 +7,14 @@ interface IRequest{
 }
 
 export default class UpdateExistingMuscle{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id, name}: IRequest): Promise<Muscles>{
-        let muscle = await this.prismaInstance.muscles.findUnique({
+        let muscle = await this.prismaClient.muscles.findUnique({
             where: {
                 id
             }
@@ -24,7 +24,7 @@ export default class UpdateExistingMuscle{
             throw new AppError("Muscle not found", 404);
         }
         
-        muscle = await this.prismaInstance.muscles.update({
+        muscle = await this.prismaClient.muscles.update({
             where: {
                 id
             },

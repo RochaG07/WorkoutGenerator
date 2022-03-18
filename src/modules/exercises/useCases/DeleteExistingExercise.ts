@@ -6,14 +6,14 @@ interface IRequest{
 }
 
 export default class DeleteExistingExercise{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id}: IRequest): Promise<void>{
-        const foundExercise = await this.prismaInstance.exercises.findUnique({
+        const foundExercise = await this.prismaClient.exercises.findUnique({
             where: {
                 id
             }
@@ -23,13 +23,13 @@ export default class DeleteExistingExercise{
             throw new AppError("Exercise not found.", 404);    
         }
 
-        await this.prismaInstance.exercises_Muscles.deleteMany({
+        await this.prismaClient.exercises_Muscles.deleteMany({
             where: {
                 fk_exercises_id: id
             }
         });
     
-        await this.prismaInstance.exercises.delete({
+        await this.prismaClient.exercises.delete({
             where: {
                 id
             }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import handleErrorResponse from "../../errors/handleErrorResponse";
-import prismaInstance from "../../prismaInstance";
+import prismaClient from "../../prismaClient";
 
 import CreateNewMuscle from "./useCases/CreateNewMuscle";
 import DeleteExistingMuscle from "./useCases/DeleteExistingMuscle";
@@ -11,7 +11,7 @@ export default class MusclesController{
     public async create(request: Request, response: Response){
         const {name} = request.body;
 
-        const createNewMuscle = new CreateNewMuscle(prismaInstance);
+        const createNewMuscle = new CreateNewMuscle(prismaClient);
 
         try{
             const result = await createNewMuscle.execute({name});
@@ -24,7 +24,7 @@ export default class MusclesController{
 
     public async read(request: Request, response: Response){
 
-        const showAllMuscles = new ShowAllMuscles(prismaInstance);
+        const showAllMuscles = new ShowAllMuscles(prismaClient);
         const result = await showAllMuscles.execute();
 
         response.json(result);
@@ -34,7 +34,7 @@ export default class MusclesController{
         const {id} = request.params;
         const {name} = request.body;
 
-        const updateExistingMuscle = new UpdateExistingMuscle(prismaInstance);
+        const updateExistingMuscle = new UpdateExistingMuscle(prismaClient);
 
 
         try{
@@ -51,7 +51,7 @@ export default class MusclesController{
     public async delete(request: Request, response: Response){
         const {id} = request.params;
 
-        const deleteExistingMuscle = new DeleteExistingMuscle(prismaInstance);
+        const deleteExistingMuscle = new DeleteExistingMuscle(prismaClient);
 
         try{
             await deleteExistingMuscle.execute({id});

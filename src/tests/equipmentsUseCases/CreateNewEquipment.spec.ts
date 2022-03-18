@@ -1,24 +1,26 @@
+import { Equipments } from "@prisma/client";
 import CreateNewEquipment from "../../modules/equipments/useCases/CreateNewEquipment"
+import prismaClient from "../../prismaClient";
 import { prismaMock } from "../../prismaMock";
 
 
 describe("Create equipment", () => {
 
-    let createNewEquipment: CreateNewEquipment;
 
-    beforeEach(()=> {
-        createNewEquipment = new CreateNewEquipment(prismaMock);
+    it("Should be able to create a new equipment", async () => {
+        const createNewEquipment = new CreateNewEquipment(prismaMock);
 
-    });
+        const equipment: Equipments = {
+            id: '1',
+            name: 'test'
+        }
 
-    it("Should be able to create a new equipment", () => {
-        const equipment = createNewEquipment.execute({
-            name: "teste22"
-        });
+        prismaMock.equipments.create.mockResolvedValue(equipment);
 
-
-
+        await expect(createNewEquipment.execute(equipment)).resolves.toEqual({
+            id: '1',
+            name: 'test',
+        })
         
-        expect(2+2).toBe(4);
     })
 })

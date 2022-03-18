@@ -7,14 +7,14 @@ interface IRequest{
 }
 
 export default class UpdateExistingExercise{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id, name}: IRequest): Promise<Exercises>{
-        let exercise = await this.prismaInstance.exercises.findUnique({
+        let exercise = await this.prismaClient.exercises.findUnique({
             where:{
                 id
             }
@@ -24,7 +24,7 @@ export default class UpdateExistingExercise{
             throw new AppError("Exercise not found.", 404);
         }
         
-        exercise = await this.prismaInstance.exercises.update({
+        exercise = await this.prismaClient.exercises.update({
             where: {
                 id
             },

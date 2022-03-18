@@ -6,14 +6,14 @@ interface IRequest{
 }
 
 export default class DeleteExistingMuscle{
-    prismaInstance: PrismaClient;
+    prismaClient: PrismaClient;
 
-    constructor(prismaInstance: PrismaClient){
-        this.prismaInstance = prismaInstance;
+    constructor(prismaClient: PrismaClient){
+        this.prismaClient = prismaClient;
     }
 
     public async execute({id}: IRequest): Promise<void>{
-        const foundMuscle = await this.prismaInstance.muscles.findUnique({
+        const foundMuscle = await this.prismaClient.muscles.findUnique({
             where: {
                 id
             }
@@ -23,13 +23,13 @@ export default class DeleteExistingMuscle{
             throw new AppError("Muscle not found.", 404);
         }
     
-        await this.prismaInstance.exercises_Muscles.deleteMany({
+        await this.prismaClient.exercises_Muscles.deleteMany({
             where:{
                 fk_muscles_id: id
             }
         });
     
-        await this.prismaInstance.muscles.delete({
+        await this.prismaClient.muscles.delete({
             where:{
                 id
             }
